@@ -1,5 +1,5 @@
 function getRandomIntInclusive(min, max) {
-  if (min>=max || min < 0){
+  if (min >= max || min < 0){
     return NaN;
   }
   min = Math.ceil(min);
@@ -11,7 +11,7 @@ getRandomIntInclusive(50, 12);
 
 const array = [1, 3, 45, 643, 6];
 
-function isAlowableLength(line, maxLength){
+function isAlowableLength(line, maxLength) {
   if (line.length < maxLength) {
     return true;
   } else{
