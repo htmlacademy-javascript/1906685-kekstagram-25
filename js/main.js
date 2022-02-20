@@ -9,13 +9,9 @@ function getRandomIntInclusive(min, max) {
 getRandomIntInclusive(50, 12);
 // Взято от сюда(https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Math/random)
 
-const array = [1, 3, 45, 643, 6];
+const someLine = 'some line';
 
 function isAlowableLength(line, maxLength) {
-  if (line.length < maxLength) {
-    return true;
-  } else{
-    return false;
-  }
+  return (line.length < maxLength);
 }
-isAlowableLength(array, 256);
+isAlowableLength(someLine, 256);
