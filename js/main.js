@@ -85,17 +85,17 @@ const MESSAGES = [
  * @param {array} elements массив, случайный элемент которого следует вернуть
  * @returns {string} случайный элемент массива
  */
- const getRandomArrayElement = (elements) => elements[getRandomIntInclusive(0, elements.length - 1)];
+const getRandomArrayElement = (elements) => elements[getRandomIntInclusive(0, elements.length - 1)];
 
 /**
  * Создаёт случайно сгенерированный комментарий
  * @returns возвращает случайный комментарий
  */
 const createComment = () => ({
-    id: getRandomIntInclusive(1, 999),
-    avatar: `img/avatar-${getRandomIntInclusive(1, 6)}.svg`,
-    message: getRandomArrayElement(MESSAGES),
-    name: getRandomArrayElement(NAMES),
+  id: getRandomIntInclusive(1, 999),
+  avatar: `img/avatar-${getRandomIntInclusive(1, 6)}.svg`,
+  message: getRandomArrayElement(MESSAGES),
+  name: getRandomArrayElement(NAMES),
 });
 
 /**
@@ -105,11 +105,11 @@ const createComment = () => ({
  */
 const createComments = (comentsCounter) => {
   const commentsData = [];
-   for (let j = 1; j <= comentsCounter; j++) {
+  for (let j = 1; j <= comentsCounter; j++) {
     commentsData.push(createComment(j));
   }
   return commentsData;
-}
+};
 
 
 /**
@@ -118,11 +118,11 @@ const createComments = (comentsCounter) => {
  * @returns пост
  */
 const createPostData = (i) => ({
-    id: i,
-    url: `photos/${i}.jpg`,
-    description: getRandomArrayElement(DESCRIPTIONS),
-    likes: getRandomIntInclusive(15, 200),
-    comments: createComments(7),
+  id: i,
+  url: `photos/${i}.jpg`,
+  description: getRandomArrayElement(DESCRIPTIONS),
+  likes: getRandomIntInclusive(15, 200),
+  comments: createComments(7),
 });
 
 /**
