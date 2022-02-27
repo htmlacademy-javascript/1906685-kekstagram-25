@@ -2,9 +2,9 @@
  * Функция возвращает случайное число в заданном диапазоне
  * @param {number} min минимальное значение заданного диапазона
  * @param {number} max максимальное значение заданного диапазона
- * @returns {number} 
+ * @returns {number}
  */
- function getRandomIntInclusive(min, max) {
+function getRandomIntInclusive(min, max) {
   if (min >= max || min < 0){
     return NaN;
   }
@@ -16,11 +16,10 @@
 // Взято от сюда(https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Math/random)
 
 
-
 const someLine = 'some line';
 /**
  * Функция для проверки максимальной длины строки
- * @param {string} line строка, длинну которой следует проверить 
+ * @param {string} line строка, длинну которой следует проверить
  * @param {number} maxLength максимальная допустимая длинна строки
  * @returns {boolean}
  */
@@ -96,17 +95,17 @@ const getRandomArrayElement = (elements) => {
  */
 const createComment = () => {
   return {
-      id: getRandomIntInclusive(1, 999),
-      avatar: `img/avatar-${getRandomIntInclusive(1, 6)}.svg`,
-      message: getRandomArrayElement(MESSAGES),
-      name: getRandomArrayElement(NAMES),
-    }
-}
+    id: getRandomIntInclusive(1, 999),
+    avatar: `img/avatar-${getRandomIntInclusive(1, 6)}.svg`,
+    message: getRandomArrayElement(MESSAGES),
+    name: getRandomArrayElement(NAMES),
+  };
+};
 const createComments = Array.from({length: 7}, createComment);
 
 /**
  * Создаёт пост
- * @param {number} i текуший элемент массива 
+ * @param {number} i текуший элемент массива
  * @returns пост
  */
 const createPostData = (i) => {
@@ -122,11 +121,11 @@ const createPostData = (i) => {
 /**
  * Создаёт массив постов
  */
-createPosts = () => {
-  let postsData = [];
+const createPosts = () => {
+  const postsData = [];
   for (let i = 1; i <= 25; i++) {
-  postsData.push(createPostData(i));
+    postsData.push(createPostData(i));
   }
   return postsData;
-}
-createPosts()
+};
+createPosts();
