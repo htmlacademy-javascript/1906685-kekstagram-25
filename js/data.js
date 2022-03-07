@@ -64,24 +64,24 @@ const createComment = () => ({
 });
 
 /**
-   * Создаёт комментарии
-   * @param {number} comentsCounter требуемое количество комментариев
-   * @returns возвращает заданное количество комментариев
-   */
+ * Создаёт комментарии
+ * @param {number} comentsCounter требуемое количество комментариев
+ * @returns возвращает заданное количество комментариев
+ */
 const createComments = (comentsCounter) => {
   const commentsData = [];
   for (let j = 1; j <= comentsCounter; j++) {
-    commentsData.push(createComment(j));
+    commentsData.push(createComment());
   }
   return commentsData;
 };
 
 
 /**
-   * Создаёт пост
-   * @param {number} i текуший элемент массива
-   * @returns пост
-   */
+ * Создаёт пост
+ * @param {number} i текуший элемент массива
+ * @returns пост
+ */
 const createPostData = (i) => ({
   id: i,
   url: `photos/${i}.jpg`,
@@ -90,4 +90,17 @@ const createPostData = (i) => ({
   comments: createComments(7),
 });
 
-export {createPostData};
+/**
+ * Создаёт массив постов
+ * @param {number} количество постов
+ */
+const createPosts = (postCounter) => {
+  const postsData = [];
+  for (let i = 1; i <= postCounter; i++) {
+    postsData.push(createPostData(i));
+  }
+  return postsData;
+};
+
+
+export {createPostData, createPosts};
