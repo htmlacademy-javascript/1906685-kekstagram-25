@@ -5,7 +5,7 @@
  * @returns {number}
  */
 function getRandomIntInclusive(min, max) {
-  if (min >= max || min < 0){
+  if (min >= max || min < 0) {
     return NaN;
   }
   min = Math.ceil(min);
@@ -22,7 +22,6 @@ function getRandomIntInclusive(min, max) {
  */
 const getRandomArrayElement = (elements) => elements[getRandomIntInclusive(0, elements.length - 1)];
 
-const someLine = 'some line';
 /**
  * Функция для проверки максимальной длины строки
  * @param {string} line строка, длинну которой следует проверить
@@ -32,6 +31,6 @@ const someLine = 'some line';
 function isAlowableLength(line, maxLength) {
   return (line.length <= maxLength);
 }
-isAlowableLength(someLine, 256);
+
 
 export {getRandomIntInclusive, getRandomArrayElement, isAlowableLength};
