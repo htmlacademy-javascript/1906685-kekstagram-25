@@ -91,12 +91,11 @@ const createPostData = (i) => ({
 });
 
 
-
 /**
  * Создаёт массив постов
  * @param {number} количество постов
  */
- const createPosts = (postCounter) => {
+const createPosts = (postCounter) => {
   const postsData = [];
   for (let i = 1; i <= postCounter; i++) {
     postsData.push(createPostData(i));
