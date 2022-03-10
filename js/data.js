@@ -104,4 +104,4 @@ const createPosts = (postCounter) => {
 };
 
 
-export {createPosts};
+export {createPosts, createPostData};
