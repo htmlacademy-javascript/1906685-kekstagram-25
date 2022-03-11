@@ -1,21 +1,25 @@
-import {createPosts} from './data.js';
-
-const pictures = document.querySelector('.pictures');
-const picturesTemplate = document.querySelector('#picture')
+const thumbnails = document.querySelector('.pictures');
+const thumbnailTemplate = document.querySelector('#picture')
   .content
   .querySelector('.picture');
 
-const POST_COUNT = 6;
-const similarPictures = createPosts(POST_COUNT);
+/**
+ *Отрисовывает миниатюры
+ * @param {Array} thumbnailData Массив объектов, описывающих миниатюры
+ */
+const renderThumbnails = (thumbnailData) => {
 
-const similarListFragment = document.createDocumentFragment();
+  const similarListFragment = document.createDocumentFragment();
 
-similarPictures.forEach(({url, likes, comments}) => {
-  const pictureElement = picturesTemplate.cloneNode(true);
-  pictureElement.querySelector('.picture__img').src = url;
-  pictureElement.querySelector('.picture__likes').textContent = likes;
-  pictureElement.querySelector('.picture__comments').textContent = comments.message;
-  similarListFragment.appendChild(pictureElement);
-});
+  thumbnailData.forEach(({url, likes, comments}) => {
+    const thumbnailElement = thumbnailTemplate.cloneNode(true);
+    thumbnailElement.querySelector('.picture__img').src = url;
+    thumbnailElement.querySelector('.picture__likes').textContent = likes;
+    thumbnailElement.querySelector('.picture__comments').textContent = comments.message;
+    similarListFragment.appendChild(thumbnailElement);
+  });
 
-pictures.appendChild(similarListFragment);
+  thumbnails.appendChild(similarListFragment);
+};
+
+export {renderThumbnails};

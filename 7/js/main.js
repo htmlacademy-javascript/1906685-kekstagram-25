@@ -1,4 +1,9 @@
 import {createPosts} from './data.js';
-import 'thumbnails.js';
+import {renderThumbnails} from './thumbnails.js';
+import {renderFullPhoto} from './fullphoto.js';
 
-createPosts(25);
+const POST_COUNT = 6;
+
+const similarPictures = createPosts(POST_COUNT);
+renderThumbnails(similarPictures);
+renderFullPhoto(similarPictures[0]);
