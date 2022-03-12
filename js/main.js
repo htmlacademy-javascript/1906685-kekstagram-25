@@ -1,14 +1,9 @@
-import {createPostData} from './data.js';
+import {createPosts} from './data.js';
+import {renderThumbnails} from './thumbnails.js';
+import {renderFullPhoto} from './fullphoto.js';
 
-/**
- * Создаёт массив постов
- * @param {number} количество постов
- */
-const createPosts = (postCounter) => {
-  const postsData = [];
-  for (let i = 1; i <= postCounter; i++) {
-    postsData.push(createPostData(i));
-  }
-  return postsData;
-};
-createPosts(25);
+const POST_COUNT = 6;
+
+const similarPictures = createPosts(POST_COUNT);
+renderThumbnails(similarPictures);
+renderFullPhoto(similarPictures[0]);
