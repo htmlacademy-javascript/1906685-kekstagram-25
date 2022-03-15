@@ -1,3 +1,5 @@
+import {windowCloser} from './util.js';
+
 /**
  *Отображает комментарии
  * @param {Array} commentsData Случайный комментарий
@@ -50,28 +52,9 @@ const renderFullPhoto  = (photoData) => {
 
   const closeButton = bigPicture.querySelector('.big-picture__cancel');
 
-  closeButton.addEventListener('click', () => {
-    bigPicture.classList.add('hidden');
-  });
 
-  if (bigPicture.classList.contains('hidden')) {
-    closeButton.removeEventListener('click', () => {
-      bigPicture.classList.add('hidden');
-    });
-  }
+  windowCloser(closeButton, bigPicture);
 
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      bigPicture.classList.add('hidden');
-    }
-  });
-
-  if (bigPicture.classList.contains('hidden')) {
-    document.removeEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        bigPicture.classList.add('hidden');
-      }});
-  }
 
   const socialCommentCount = bigPicture.querySelector('.social__comment-count');
   const commentLoader = bigPicture.querySelector('.comments-loader');
