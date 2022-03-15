@@ -32,5 +32,29 @@ function isAlowableLength(line, maxLength) {
   return (line.length <= maxLength);
 }
 
+/**
+ * функция закрытия окон
+ * @param {Element} closeButton Кнопка, закрывающая окно
+ * @param {Element} window Окно, которое надо закрыть
+ */
+const windowCloser = (closeButton, window) => {
+  const onPopupEscKeydown = (evt) => {
+    if (evt.key === 'Escape') {
+      evt.preventDefault();
+      closeUserModal();
+    }
+  };
+  document.addEventListener('keydown', onPopupEscKeydown);
 
-export {getRandomIntInclusive, getRandomArrayElement, isAlowableLength};
+  function closeUserModal () {
+    window.classList.add('hidden');
+
+    document.removeEventListener('keydown', onPopupEscKeydown);
+  }
+
+  closeButton.addEventListener('click', () => {
+    closeUserModal();
+  });
+};
+
+export {getRandomIntInclusive, getRandomArrayElement, isAlowableLength, windowCloser};
