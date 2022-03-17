@@ -30,16 +30,16 @@ const renderComments = (commentsData) => {
   }
   const loadMore = document.querySelector('.social__comments-loader');
   loadMore.addEventListener('click', () => {
-    fixCommentAmount += 5;
+    const shownCommentsAmount = document.querySelector('.shown-comments-amount');
+    if (Number(commentsData.length) - Number(shownCommentsAmount.textContent) < 5) {
+      fixCommentAmount = Number(shownCommentsAmount.textContent) + (Number(commentsData.length) - Number(shownCommentsAmount.textContent));
+      loadMore.setAttribute('disabled', 'disabled');
+    } else {
+      fixCommentAmount += 5;
+    }
+    shownCommentsAmount.textContent = fixCommentAmount;
     for (let j = 0; j < fixCommentAmount; j++) {
       allComments[j].classList.remove('hidden');
-    }
-    const shownCommentsAmount = document.querySelector('.shown-comments-amount');
-    // Условие ниже пока не работает как задумано
-    if (commentsData.length - shownCommentsAmount.textContent % 5 < 5) {
-      shownCommentsAmount.textContent += commentsData.length - shownCommentsAmount.textContent % 5;
-    } else {
-      shownCommentsAmount.textContent = fixCommentAmount;
     }
   });
 };
