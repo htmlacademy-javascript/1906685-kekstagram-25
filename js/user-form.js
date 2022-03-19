@@ -86,4 +86,34 @@ const userFormControler = () => {
   });
 };
 
+const scaleSmaller = document.querySelector('.scale__control--smaller');
+const scaleBigger = document.querySelector('.scale__control--bigger');
+const scaleValue = document.querySelector('.scale__control--value');
+const imageUploadPreview = document.querySelector('.img-upload__preview').querySelector('img');
+
+scaleSmaller.addEventListener('click', () => {
+  if (scaleValue.value === '100%') {
+    scaleValue.value = '75%';
+    imageUploadPreview.style.transform = 'scale(0.75)';
+  } else if (scaleValue.value === '75%') {
+    scaleValue.value = '50%';
+    imageUploadPreview.style.transform = 'scale(0.50)';
+  } else if (scaleValue.value === '50%') {
+    scaleValue.value = '25%';
+    imageUploadPreview.style.transform = 'scale(0.25)';
+  }
+});
+scaleBigger.addEventListener('click', () => {
+  if (scaleValue.value === '25%') {
+    scaleValue.value = '50%';
+    imageUploadPreview.style.transform = 'scale(0.50)';
+  } else if (scaleValue.value === '50%') {
+    scaleValue.value = '75%';
+    imageUploadPreview.style.transform = 'scale(0.75)';
+  }else if (scaleValue.value === '75%') {
+    scaleValue.value = '100%';
+    imageUploadPreview.style.transform = 'scale(1.00)';
+  }
+});
+
 export{userFormControler};
