@@ -3,7 +3,7 @@ import {renderThumbnails} from './thumbnails.js';
 import {renderFullPhoto} from './fullphoto.js';
 import {userFormControler} from'./user-form.js';
 
-const POST_COUNT = 6;
+const POST_COUNT = 12;
 
 const similarPictures = createPosts(POST_COUNT);
 renderThumbnails(similarPictures);

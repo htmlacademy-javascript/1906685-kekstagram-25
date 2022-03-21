@@ -1,5 +1,5 @@
 import {windowCloser} from './util.js';
-
+let fixCommentAmount = 5;
 /**
  *Отображает комментарии
  * @param {Array} commentsData Случайный комментарий
@@ -10,6 +10,7 @@ const renderComments = (commentsData) => {
   commentsData.forEach((element) => {
     const commentBox = document.createElement('li');
     commentBox.classList.add('social__comment');
+    commentBox.classList.add('hidden');
     const commenter = document.createElement('img');
     commenter.classList.add('social__picture');
     commenter.src = element.avatar;
@@ -23,7 +24,24 @@ const renderComments = (commentsData) => {
     commentBox.append(commentText);
     commentsContainer.append(commentBox);
   });
-
+  const allComments = document.querySelectorAll('.social__comment');
+  for (let i = 0; i < fixCommentAmount; i++) {
+    allComments[i].classList.remove('hidden');
+  }
+  const loadMore = document.querySelector('.social__comments-loader');
+  loadMore.addEventListener('click', () => {
+    const shownCommentsAmount = document.querySelector('.shown-comments-amount');
+    if (Number(commentsData.length) - Number(shownCommentsAmount.textContent) < 5) {
+      fixCommentAmount = Number(shownCommentsAmount.textContent) + (Number(commentsData.length) - Number(shownCommentsAmount.textContent));
+      loadMore.setAttribute('disabled', 'disabled');
+    } else {
+      fixCommentAmount += 5;
+    }
+    shownCommentsAmount.textContent = fixCommentAmount;
+    for (let j = 0; j < fixCommentAmount; j++) {
+      allComments[j].classList.remove('hidden');
+    }
+  });
 };
 
 
@@ -52,16 +70,16 @@ const renderFullPhoto  = (photoData) => {
 
   const closeButton = bigPicture.querySelector('.big-picture__cancel');
 
-
   windowCloser(closeButton, bigPicture);
 
 
   const socialCommentCount = bigPicture.querySelector('.social__comment-count');
   const commentLoader = bigPicture.querySelector('.comments-loader');
-  socialCommentCount.classList.add('hidden');
-  commentLoader.classList.add('hidden');
+  socialCommentCount.classList.remove('hidden');
+  commentLoader.classList.remove('hidden');
   const docBody = document.querySelector('body');
   docBody.classList.add('modal-open');
+
 };
 
 
