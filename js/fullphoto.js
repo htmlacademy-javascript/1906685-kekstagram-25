@@ -71,9 +71,7 @@ const renderFullPhoto  = (photoData) => {
 
   const closeButton = bigPicture.querySelector('.big-picture__cancel');
 
-
   windowCloser(closeButton, bigPicture);
-
 
   const socialCommentCount = bigPicture.querySelector('.social__comment-count');
   const commentLoader = bigPicture.querySelector('.comments-loader');
