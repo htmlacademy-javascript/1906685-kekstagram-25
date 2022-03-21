@@ -70,7 +70,6 @@ const renderFullPhoto  = (photoData) => {
 
   const closeButton = bigPicture.querySelector('.big-picture__cancel');
 
-
   windowCloser(closeButton, bigPicture);
 
 
