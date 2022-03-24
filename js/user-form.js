@@ -3,7 +3,6 @@ const uploadButton = imageUploadForm.querySelector('.img-upload__input');
 const uploadOverlay = imageUploadForm.querySelector('.img-upload__overlay');
 // const selectedFile = imageUploadForm.querySelector('.img-upload__input').files[0];
 const body = document.querySelector('body');
-// const uplPreview = imageUploadForm.querySelector('.img-upload__preview').querySelector('img');
 const previewCloseButton = uploadOverlay.querySelector('.img-upload__cancel');
 const commentInput = uploadOverlay.querySelector('.text__description');
 const hashtagInput = uploadOverlay.querySelector('.text__hashtags');
@@ -92,37 +91,96 @@ const scaleValue = document.querySelector('.scale__control--value');
 const imageUploadPreview = document.querySelector('.img-upload__preview').querySelector('img');
 
 scaleSmaller.addEventListener('click', () => {
-  if (scaleValue.value === '100%') {
-    scaleValue.value = '75%';
-    imageUploadPreview.style.transform = 'scale(0.75)';
-  } else if (scaleValue.value === '75%') {
-    scaleValue.value = '50%';
-    imageUploadPreview.style.transform = 'scale(0.50)';
-  } else if (scaleValue.value === '50%') {
-    scaleValue.value = '25%';
-    imageUploadPreview.style.transform = 'scale(0.25)';
+  if (parseInt(scaleValue.value, 10) > 25) {
+    scaleValue.value = `${parseInt(scaleValue.value, 10) - 25}%`;
+    imageUploadPreview.style.transform = `scale(${  parseInt(scaleValue.value, 10) / 100  })`;
   }
 });
+
 scaleBigger.addEventListener('click', () => {
-  if (scaleValue.value === '25%') {
-    scaleValue.value = '50%';
-    imageUploadPreview.style.transform = 'scale(0.50)';
-  } else if (scaleValue.value === '50%') {
-    scaleValue.value = '75%';
-    imageUploadPreview.style.transform = 'scale(0.75)';
-  }else if (scaleValue.value === '75%') {
-    scaleValue.value = '100%';
-    imageUploadPreview.style.transform = 'scale(1.00)';
+  if (parseInt(scaleValue.value, 10) < 100) {
+    scaleValue.value = `${parseInt(scaleValue.value, 10) + 25}%`;
+    imageUploadPreview.style.transform = `scale(${  parseInt(scaleValue.value, 10) / 100  })`;
   }
 });
 
-// const effectSelector = document.querySelectorAll('.effects__radio');
 
+const sliderElement = document.querySelector('.effect-level__slider');
+const effectSliderValue = document.querySelector('.effect-level__value');
+const filterSettingsCollection = {
+  chrome: {
+    min: 0,
+    max: 1,
+    step: 0.1,
+  },
+  sepia: {
+    min: 0,
+    max: 1,
+    step: 0.1,
+  },
+  marvin: {
+    min: 0,
+    max: 100,
+    step: 1,
+  },
+  phobos: {
+    min: 0,
+    max: 3,
+    step: 0.1,
+  },
+  heat: {
+    min: 1,
+    max: 3,
+    step: 0.1,
+  },
+};
+const sliderController = (min, max, step) => {
+  noUiSlider.create(sliderElement, {
+    range: {
+      min: min,
+      max: max,
+    },
+    start: max,
+    step: step,
+    connect: 'lower',
+  });
+
+  sliderElement.noUiSlider.on('update', () => {
+    effectSliderValue.value = sliderElement.noUiSlider.get();
+    if (imageUploadPreview.classList.contains('effects__preview--chrome')) {
+      imageUploadPreview.style.filter = `grayscale(${effectSliderValue.value})`;
+    }
+    if (imageUploadPreview.classList.contains('effects__preview--sepia')) {
+      imageUploadPreview.style.filter = `sepia(${effectSliderValue.value})`;
+    }
+    if (imageUploadPreview.classList.contains('effects__preview--marvin')) {
+      imageUploadPreview.style.filter = `invert(${effectSliderValue.value}%)`;
+    }
+    if (imageUploadPreview.classList.contains('effects__preview--phobos')) {
+      imageUploadPreview.style.filter = `blur(${effectSliderValue.value}px)`;
+    }
+    if (imageUploadPreview.classList.contains('effects__preview--heat')) {
+      imageUploadPreview.style.filter = `brightness(${effectSliderValue.value})`;
+    }
+  });
+};
 const  onFilterChange = (evt) => {
+  if (evt.target.value === 'none') {
+    sliderElement.classList.add('hidden');
+    imageUploadPreview.style.filter = 'none';
+  } else {sliderElement.classList.remove('hidden');}
   imageUploadPreview.classList.remove(imageUploadPreview.classList[0]);
   imageUploadPreview.classList.add(`effects__preview--${evt.target.value}`);
+  sliderElement.noUiSlider.updateOptions({
+    range: {
+      'min': filterSettingsCollection[evt.target.value].min,
+      'max': filterSettingsCollection[evt.target.value].max,
+    },
+    step: filterSettingsCollection[evt.target.value].step,
+    start: 100,
+  });
 };
 
 imageUploadForm.addEventListener('change', onFilterChange);
 
-export{userFormControler};
+export{userFormControler, sliderController};
