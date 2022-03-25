@@ -31,7 +31,8 @@ const renderComments = (commentsData) => {
   const loadMore = document.querySelector('.social__comments-loader');
   loadMore.addEventListener('click', () => {
     const shownCommentsAmount = document.querySelector('.shown-comments-amount');
-    if (Number(commentsData.length) - Number(shownCommentsAmount.textContent) < 5) {
+    const COMMENTS_ADD_STEP = 5;
+    if (Number(commentsData.length) - Number(shownCommentsAmount.textContent) < COMMENTS_ADD_STEP) {
       fixCommentAmount = Number(shownCommentsAmount.textContent) + (Number(commentsData.length) - Number(shownCommentsAmount.textContent));
       loadMore.setAttribute('disabled', 'disabled');
     } else {
@@ -71,7 +72,6 @@ const renderFullPhoto  = (photoData) => {
   const closeButton = bigPicture.querySelector('.big-picture__cancel');
 
   windowCloser(closeButton, bigPicture);
-
 
   const socialCommentCount = bigPicture.querySelector('.social__comment-count');
   const commentLoader = bigPicture.querySelector('.comments-loader');
