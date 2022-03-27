@@ -1,11 +1,17 @@
+import {showAlert} from './util.js';
 const imageUploadForm = document.querySelector('.img-upload__form');
 const uploadButton = imageUploadForm.querySelector('.img-upload__input');
 const uploadOverlay = imageUploadForm.querySelector('.img-upload__overlay');
 // const selectedFile = imageUploadForm.querySelector('.img-upload__input').files[0];
+const effectLevel = document.querySelector('.img-upload__effect-level');
+
 const body = document.querySelector('body');
 const previewCloseButton = uploadOverlay.querySelector('.img-upload__cancel');
 const commentInput = uploadOverlay.querySelector('.text__description');
 const hashtagInput = uploadOverlay.querySelector('.text__hashtags');
+const imageUploadPreview = document.querySelector('.img-upload__preview').querySelector('img');
+const sliderElement = document.querySelector('.effect-level__slider');
+const scaleValue = document.querySelector('.scale__control--value');
 const onPopupEscKeydown = (e) => {
   if (e.key === 'Escape') {
     e.preventDefault();
@@ -22,7 +28,11 @@ function closeUserModal () {
 
 uploadButton.addEventListener('click', (evt) => {
   evt.preventDefault();
-  //   uplPreview.src = selectedFile;
+  effectLevel.classList.add('hidden');
+  imageUploadPreview.style.transform = 'scale(1)';
+  scaleValue.value = '100%';
+  imageUploadPreview.style.filter = 'none';
+  sliderElement.classList.add('hidden');
   uploadOverlay.classList.remove('hidden');
   body.classList.add('modal-open');
   document.addEventListener('keydown', onPopupEscKeydown);
@@ -46,49 +56,118 @@ uploadButton.addEventListener('click', (evt) => {
   });
 });
 
-const userFormControler = () => {
-  const hashTagInputChangeHandler = (evt) => {
-    const hashtagPattern =  /^#[A-Za-zА-Яа-яЁё0-9]{1,19}$/;
-    const hashtagInputValue = evt.target.value;
-    const hashArray = hashtagInputValue.split(' ');
-    let counter = 0;
-    for (let i = 0; i < hashArray.length; i++) {
-      if (!hashtagPattern.test(hashArray[i])) {
-        evt.target.setCustomValidity('Неправильный хэштег');
-        break;
-      }
-      if (hashArray.length > 5) {
-        evt.target.setCustomValidity('Слишком много хэштегов');
-        break;
-      }
-      for (let j = 0; j < hashArray.length; j++) {
-        if(hashArray[i].toLowerCase() === hashArray[j].toLowerCase()){
-          counter++;
-        }
-      }
+// const userFormControler = () => {
+//   const hashTagInputChangeHandler = (evt) => {
+//     const hashtagPattern =  /^#[A-Za-zА-Яа-яЁё0-9]{1,19}$/;
+//     const hashtagInputValue = evt.target.value;
+//     const hashArray = hashtagInputValue.split(' ');
+//     let counter = 0;
+//     for (let i = 0; i < hashArray.length; i++) {
+//
+//       }
+//       if (hashArray.length > 5) {
+//
+//       }
+// for (let j = 0; j < hashArray.length; j++) {
+//   if(hashArray[i].toLowerCase() === hashArray[j].toLowerCase()){
+//     counter++;
+//   }
+// }
 
-      if (counter > hashArray.length) {
-        evt.target.setCustomValidity('Повторяться нельзя');
-        break;
+//       if (counter > hashArray.length) {
+//         evt.target.setCustomValidity('Повторяться нельзя');
+//         break;
+//       }
+
+//       evt.target.setCustomValidity('');
+
+//       evt.target.reportValidity();
+//     }
+//   };
+//   hashtagInput.addEventListener('input', hashTagInputChangeHandler);
+
+//   imageUploadForm.addEventListener('submit', (evt) => {
+//     evt.preventDefault();
+//     evt.target.checkValidity();
+//   });
+// };
+
+const pristine = new Pristine(imageUploadForm, {
+  classTo: 'setup-upload-form__element',
+  errorTextParent: 'setup-upload-form__element',
+  errorTextClass: 'setup-upload-form__error-text',
+});
+
+const hashtagPattern =  /^#[A-Za-zА-Яа-яЁё0-9]{1,19}$/;
+// const hashtagInputValue = hashtagInput.value;
+// const validateSymbols = () => {
+// };
+// const validateSymbolsError = () => {
+//   'Неправильный хэштег';
+// };
+// pristine.addValidator(hashtagInput, validateHashtags, 'Неправильный хэштег');
+// pristine.addValidator(hashtagInput, ad, 'Неправильнsrштег');
+
+// for (let i = 0; i < hashArray.length; i++) {
+//   if (!hashtagPattern.test(hashArray[i])) {
+//     // break;
+//     return false;
+//   }else {return true;}
+// }
+const validateHashtagsQuantity = (value) => {
+  const hashArray = value.split(' ');
+  return hashArray.length < 6;
+};
+const validateHashtagsLength = (value) => {
+  let counter = 0;
+  const hashArray = value.split(' ');
+  let hashSymbolTest;
+  let hashRepeatTest;
+  for (let i = 0; i < hashArray.length; i++) {
+    hashSymbolTest =  hashtagPattern.test(hashArray[i]);
+    for (let j = 0; j < hashArray.length; j++) {
+      if(hashArray[i].toLowerCase() === hashArray[j].toLowerCase()){
+        counter++;
+      } else if (hashArray[i].toLowerCase().length < hashArray[j].toLowerCase().length)
+      {counter--;
       }
-
-      evt.target.setCustomValidity('');
-
-      evt.target.reportValidity();
     }
-  };
-  hashtagInput.addEventListener('input', hashTagInputChangeHandler);
-
+    hashRepeatTest = counter <= hashArray.length;
+  }
+  return hashSymbolTest && hashRepeatTest;
+};
+pristine.addValidator(hashtagInput, validateHashtagsQuantity, 'Слишком много хэштегов');
+pristine.addValidator(hashtagInput, validateHashtagsLength, 'Неправильный хэштег');
+const enableValidation = (onSuccess) => {
   imageUploadForm.addEventListener('submit', (evt) => {
     evt.preventDefault();
-    evt.target.checkValidity();
+    // pristine.validate();
+    const isValid = pristine.validate();
+    if (isValid) {
+      const formData = new FormData(evt.target);
+      fetch(
+        'https://25.javascript.pages.academy/kekstagram',
+        {
+          method: 'POST',
+          body: formData,
+        },
+      )
+        .then((response) => {
+          if (response.ok) {
+            onSuccess();
+          } else {
+            showAlert('Не удалось отправить форму. Попробуйте ещё раз');
+          }
+        })
+        .catch(() => {
+          showAlert('Не удалось отправить форму. Попробуйте ещё раз');
+        });
+    }
   });
 };
 
 const scaleSmaller = document.querySelector('.scale__control--smaller');
 const scaleBigger = document.querySelector('.scale__control--bigger');
-const scaleValue = document.querySelector('.scale__control--value');
-const imageUploadPreview = document.querySelector('.img-upload__preview').querySelector('img');
 
 scaleSmaller.addEventListener('click', () => {
   if (parseInt(scaleValue.value, 10) > 25) {
@@ -105,7 +184,6 @@ scaleBigger.addEventListener('click', () => {
 });
 
 
-const sliderElement = document.querySelector('.effect-level__slider');
 const effectSliderValue = document.querySelector('.effect-level__value');
 const filterSettingsCollection = {
   chrome: {
@@ -165,10 +243,15 @@ const sliderController = (min, max, step) => {
   });
 };
 const  onFilterChange = (evt) => {
+  effectLevel.classList.remove('hidden');
   if (evt.target.value === 'none') {
+    effectLevel.classList.add('hidden');
     sliderElement.classList.add('hidden');
     imageUploadPreview.style.filter = 'none';
-  } else {sliderElement.classList.remove('hidden');}
+  } else {
+    sliderElement.classList.remove('hidden');
+    effectLevel.classList.remove('hidden');
+  }
   imageUploadPreview.classList.remove(imageUploadPreview.classList[0]);
   imageUploadPreview.classList.add(`effects__preview--${evt.target.value}`);
   sliderElement.noUiSlider.updateOptions({
@@ -183,4 +266,4 @@ const  onFilterChange = (evt) => {
 
 imageUploadForm.addEventListener('change', onFilterChange);
 
-export{userFormControler, sliderController};
+export {sliderController, enableValidation, closeUserModal};

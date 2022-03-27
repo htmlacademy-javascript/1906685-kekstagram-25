@@ -6,6 +6,7 @@ let fixCommentAmount = 5;
  */
 const renderComments = (commentsData) => {
   const commentsContainer = document.querySelector('.social__comments');
+  const commentsDocumentFragment = document.createDocumentFragment();
   commentsContainer.innerHTML = '';
   commentsData.forEach((element) => {
     const commentBox = document.createElement('li');
@@ -22,9 +23,9 @@ const renderComments = (commentsData) => {
     commentText.classList.add('social__text');
     commentText.textContent = element.message;
     commentBox.append(commentText);
-    commentsContainer.append(commentBox);
+    commentsDocumentFragment.append(commentBox);
   });
-  const allComments = document.querySelectorAll('.social__comment');
+  const allComments = commentsDocumentFragment.querySelectorAll('.social__comment');
   for (let i = 0; i < fixCommentAmount; i++) {
     allComments[i].classList.remove('hidden');
   }
@@ -43,6 +44,7 @@ const renderComments = (commentsData) => {
       allComments[j].classList.remove('hidden');
     }
   });
+  return commentsDocumentFragment;
 };
 
 
@@ -64,7 +66,8 @@ const renderFullPhoto  = (photoData) => {
   commentCount.textContent = photoData.comments.length;
 
   const commentsContainer = document.querySelector('.social__comments');
-  commentsContainer.append(renderComments(photoData.comments));
+  const qwe = renderComments(photoData.comments);
+  commentsContainer.append(qwe);
 
   const socialCaption = bigPicture.querySelector('.social__caption');
   socialCaption.textContent = photoData.description;
