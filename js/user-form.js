@@ -1,8 +1,8 @@
 import {showAlert} from './util.js';
+import {sendData} from './network.js';
 const imageUploadForm = document.querySelector('.img-upload__form');
-const uploadButton = imageUploadForm.querySelector('.img-upload__input');
+const uploadInput = imageUploadForm.querySelector('.img-upload__input');
 const uploadOverlay = imageUploadForm.querySelector('.img-upload__overlay');
-// const selectedFile = imageUploadForm.querySelector('.img-upload__input').files[0];
 const effectLevel = document.querySelector('.img-upload__effect-level');
 
 const body = document.querySelector('body');
@@ -26,7 +26,7 @@ function closeUserModal () {
   document.removeEventListener('keydown', onPopupEscKeydown);
 }
 
-uploadButton.addEventListener('click', (evt) => {
+uploadInput.addEventListener('change', (evt) => {
   evt.preventDefault();
   effectLevel.classList.add('hidden');
   imageUploadPreview.style.transform = 'scale(1)';
@@ -56,41 +56,6 @@ uploadButton.addEventListener('click', (evt) => {
   });
 });
 
-// const userFormControler = () => {
-//   const hashTagInputChangeHandler = (evt) => {
-//     const hashtagPattern =  /^#[A-Za-zА-Яа-яЁё0-9]{1,19}$/;
-//     const hashtagInputValue = evt.target.value;
-//     const hashArray = hashtagInputValue.split(' ');
-//     let counter = 0;
-//     for (let i = 0; i < hashArray.length; i++) {
-//
-//       }
-//       if (hashArray.length > 5) {
-//
-//       }
-// for (let j = 0; j < hashArray.length; j++) {
-//   if(hashArray[i].toLowerCase() === hashArray[j].toLowerCase()){
-//     counter++;
-//   }
-// }
-
-//       if (counter > hashArray.length) {
-//         evt.target.setCustomValidity('Повторяться нельзя');
-//         break;
-//       }
-
-//       evt.target.setCustomValidity('');
-
-//       evt.target.reportValidity();
-//     }
-//   };
-//   hashtagInput.addEventListener('input', hashTagInputChangeHandler);
-
-//   imageUploadForm.addEventListener('submit', (evt) => {
-//     evt.preventDefault();
-//     evt.target.checkValidity();
-//   });
-// };
 
 const pristine = new Pristine(imageUploadForm, {
   classTo: 'setup-upload-form__element',
@@ -99,69 +64,36 @@ const pristine = new Pristine(imageUploadForm, {
 });
 
 const hashtagPattern =  /^#[A-Za-zА-Яа-яЁё0-9]{1,19}$/;
-// const hashtagInputValue = hashtagInput.value;
-// const validateSymbols = () => {
-// };
-// const validateSymbolsError = () => {
-//   'Неправильный хэштег';
-// };
-// pristine.addValidator(hashtagInput, validateHashtags, 'Неправильный хэштег');
-// pristine.addValidator(hashtagInput, ad, 'Неправильнsrштег');
-
-// for (let i = 0; i < hashArray.length; i++) {
-//   if (!hashtagPattern.test(hashArray[i])) {
-//     // break;
-//     return false;
-//   }else {return true;}
-// }
+const HASHTAG_LIMIT = 5;
 const validateHashtagsQuantity = (value) => {
   const hashArray = value.split(' ');
-  return hashArray.length < 6;
+  return hashArray.length <= HASHTAG_LIMIT;
 };
 const validateHashtagsLength = (value) => {
-  let counter = 0;
   const hashArray = value.split(' ');
-  let hashSymbolTest;
-  let hashRepeatTest;
   for (let i = 0; i < hashArray.length; i++) {
-    hashSymbolTest =  hashtagPattern.test(hashArray[i]);
-    for (let j = 0; j < hashArray.length; j++) {
+
+    if (!hashtagPattern.test(hashArray[i])) {
+      return false;
+    }
+    for (let j = i + 1; j < hashArray.length; j++) {
       if(hashArray[i].toLowerCase() === hashArray[j].toLowerCase()){
-        counter++;
-      } else if (hashArray[i].toLowerCase().length < hashArray[j].toLowerCase().length)
-      {counter--;
+        return false;
       }
     }
-    hashRepeatTest = counter <= hashArray.length;
   }
-  return hashSymbolTest && hashRepeatTest;
+  return true;
 };
+
 pristine.addValidator(hashtagInput, validateHashtagsQuantity, 'Слишком много хэштегов');
 pristine.addValidator(hashtagInput, validateHashtagsLength, 'Неправильный хэштег');
 const enableValidation = (onSuccess) => {
   imageUploadForm.addEventListener('submit', (evt) => {
     evt.preventDefault();
-    // pristine.validate();
     const isValid = pristine.validate();
     if (isValid) {
       const formData = new FormData(evt.target);
-      fetch(
-        'https://25.javascript.pages.academy/kekstagram',
-        {
-          method: 'POST',
-          body: formData,
-        },
-      )
-        .then((response) => {
-          if (response.ok) {
-            onSuccess();
-          } else {
-            showAlert('Не удалось отправить форму. Попробуйте ещё раз');
-          }
-        })
-        .catch(() => {
-          showAlert('Не удалось отправить форму. Попробуйте ещё раз');
-        });
+      sendData(onSuccess, showAlert, formData);
     }
   });
 };
@@ -169,17 +101,19 @@ const enableValidation = (onSuccess) => {
 const scaleSmaller = document.querySelector('.scale__control--smaller');
 const scaleBigger = document.querySelector('.scale__control--bigger');
 
+const MIN_PERCENTAGE = 25;
+const MAX_PERCENTAGE = 100;
 scaleSmaller.addEventListener('click', () => {
-  if (parseInt(scaleValue.value, 10) > 25) {
-    scaleValue.value = `${parseInt(scaleValue.value, 10) - 25}%`;
-    imageUploadPreview.style.transform = `scale(${  parseInt(scaleValue.value, 10) / 100  })`;
+  if (parseInt(scaleValue.value, 10) > MIN_PERCENTAGE) {
+    scaleValue.value = `${parseInt(scaleValue.value, 10) - MIN_PERCENTAGE}%`;
+    imageUploadPreview.style.transform = `scale(${  parseInt(scaleValue.value, 10) / MAX_PERCENTAGE  })`;
   }
 });
 
 scaleBigger.addEventListener('click', () => {
-  if (parseInt(scaleValue.value, 10) < 100) {
-    scaleValue.value = `${parseInt(scaleValue.value, 10) + 25}%`;
-    imageUploadPreview.style.transform = `scale(${  parseInt(scaleValue.value, 10) / 100  })`;
+  if (parseInt(scaleValue.value, 10) < MAX_PERCENTAGE) {
+    scaleValue.value = `${parseInt(scaleValue.value, 10) + MIN_PERCENTAGE}%`;
+    imageUploadPreview.style.transform = `scale(${  parseInt(scaleValue.value, 10) / MAX_PERCENTAGE  })`;
   }
 });
 

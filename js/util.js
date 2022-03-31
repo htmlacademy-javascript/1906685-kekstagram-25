@@ -1,3 +1,5 @@
+import {closeUserModal} from './user-form.js';
+
 /**
  * Функция возвращает случайное число в заданном диапазоне
  * @param {number} min минимальное значение заданного диапазона
@@ -41,43 +43,50 @@ const windowCloser = (closeButton, window) => {
   const onPopupEscKeydown = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
-      closeUserModal();
+      closeWindow();
     }
   };
   document.addEventListener('keydown', onPopupEscKeydown);
 
-  function closeUserModal () {
+  function closeWindow () {
     window.classList.add('hidden');
 
     document.removeEventListener('keydown', onPopupEscKeydown);
   }
 
   closeButton.addEventListener('click', () => {
-    closeUserModal();
+    closeWindow();
   });
 };
 
 const ALERT_SHOW_TIME = 5000;
 
-const showAlert = (message) => {
-  const alertContainer = document.createElement('div');
-  alertContainer.style.zIndex = 100;
-  alertContainer.style.position = 'absolute';
-  alertContainer.style.left = 0;
-  alertContainer.style.top = 0;
-  alertContainer.style.right = 0;
-  alertContainer.style.padding = '10px 3px';
-  alertContainer.style.fontSize = '30px';
-  alertContainer.style.textAlign = 'center';
-  alertContainer.style.backgroundColor = 'red';
+const errorTemplate = document.querySelector('#error')
+  .content
+  .querySelector('.error');
+const errorElement = errorTemplate.cloneNode(true);
 
-  alertContainer.textContent = message;
-
-  document.body.append(alertContainer);
+const showAlert = () => {
+  closeUserModal();
+  document.body.append(errorElement);
 
   setTimeout(() => {
-    alertContainer.remove();
+    errorTemplate.remove();
   }, ALERT_SHOW_TIME);
 };
 
-export {getRandomIntInclusive, getRandomArrayElement, isAlowableLength, windowCloser, showAlert};
+const successTemplate = document.querySelector('#success')
+  .content
+  .querySelector('.success');
+const successElement = successTemplate.cloneNode(true);
+
+const showSuccess = () => {
+  closeUserModal();
+  document.body.append(successElement);
+
+  setTimeout(() => {
+    successTemplate.remove();
+  }, ALERT_SHOW_TIME);
+};
+
+export {getRandomIntInclusive, getRandomArrayElement, isAlowableLength, windowCloser, showAlert, showSuccess};

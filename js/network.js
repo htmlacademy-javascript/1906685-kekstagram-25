@@ -1,4 +1,4 @@
-const createLoader = (onSuccess, onError) => {
+const getData = (onSuccess, onError) => {
   fetch(
     'https://25.javascript.pages.academy/kekstagram/data'
   )
@@ -16,4 +16,24 @@ const createLoader = (onSuccess, onError) => {
       onError(err);
     });
 };
-export {createLoader};
+
+const sendData = (onSuccess, onError, formData) => {
+  fetch(
+    'https://25.javascript.pages.academy/kekstagram',
+    {
+      method: 'POST',
+      body: formData,
+    },
+  )
+    .then((response) => {
+      if (response.ok) {
+        onSuccess();
+      } else {
+        onError();
+      }
+    })
+    .catch(() => {
+      onError();
+    });
+};
+export {getData, sendData};
