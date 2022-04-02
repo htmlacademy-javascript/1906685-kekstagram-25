@@ -4,7 +4,6 @@ const imageUploadForm = document.querySelector('.img-upload__form');
 const uploadInput = imageUploadForm.querySelector('.img-upload__input');
 const uploadOverlay = imageUploadForm.querySelector('.img-upload__overlay');
 const effectLevel = document.querySelector('.img-upload__effect-level');
-
 const body = document.querySelector('body');
 const previewCloseButton = uploadOverlay.querySelector('.img-upload__cancel');
 const commentInput = uploadOverlay.querySelector('.text__description');
@@ -17,7 +16,6 @@ const pristine = new Pristine(imageUploadForm, {
   errorTextParent: 'setup-upload-form__element',
   errorTextClass: 'setup-upload-form__error-text',
 });
-
 const scaleSmaller = document.querySelector('.scale__control--smaller');
 const scaleBigger = document.querySelector('.scale__control--bigger');
 const MIN_PERCENTAGE = 25;
@@ -40,12 +38,8 @@ function closeUserModal () {
 }
 
 uploadInput.addEventListener('change', (evt) => {
-  // effectLevel.classList.add('hidden');
-  // sliderElement.classList.add('hidden');
-  // imageUploadPreview.style.filter = 'none';
-
   const FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
-  const fileChooser = document.querySelector('.img-upload__preview input[type=file]');
+  const fileChooser = document.querySelector('.img-upload__start input[type=file]');
   const preview = document.querySelector('.setup-upload-image');
 
   fileChooser.addEventListener('change', () => {
@@ -218,6 +212,10 @@ const  onFilterChange = (evt) => {
   });
 };
 
-imageUploadForm.addEventListener('change', onFilterChange);
+const radios = document.getElementsByName('effect');
+for (const radio of radios) {
+  radio.addEventListener('change', onFilterChange);
+}
+// imageUploadForm.addEventListener('change', onFilterChange);
 
 export {sliderController, enableValidation, closeUserModal};
