@@ -59,34 +59,33 @@ const windowCloser = (closeButton, window) => {
   });
 };
 
-const ALERT_SHOW_TIME = 5000;
 
 const errorTemplate = document.querySelector('#error')
   .content
   .querySelector('.error');
-const errorElement = errorTemplate.cloneNode(true);
 
 const showAlert = () => {
+  const errorPopup = errorTemplate.cloneNode(true);
   closeUserModal();
-  document.body.append(errorElement);
-
-  setTimeout(() => {
-    errorTemplate.remove();
-  }, ALERT_SHOW_TIME);
+  document.body.append(errorPopup);
+  const tryAgainButton = errorPopup.querySelector('.error__button');
+  tryAgainButton.addEventListener('click', () => {
+    errorPopup.remove();
+  });
 };
 
 const successTemplate = document.querySelector('#success')
   .content
   .querySelector('.success');
-const successElement = successTemplate.cloneNode(true);
 
 const showSuccess = () => {
+  const successPopup = successTemplate.cloneNode(true);
   closeUserModal();
-  document.body.append(successElement);
-
-  setTimeout(() => {
-    successTemplate.remove();
-  }, ALERT_SHOW_TIME);
+  document.body.append(successPopup);
+  const coolButton = successPopup.querySelector('.success__button');
+  coolButton.addEventListener('click', () => {
+    successPopup.remove();
+  });
 };
 
 export {getRandomIntInclusive, getRandomArrayElement, isAlowableLength, windowCloser, showAlert, showSuccess};

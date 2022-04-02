@@ -12,6 +12,18 @@ const hashtagInput = uploadOverlay.querySelector('.text__hashtags');
 const imageUploadPreview = document.querySelector('.img-upload__preview').querySelector('img');
 const sliderElement = document.querySelector('.effect-level__slider');
 const scaleValue = document.querySelector('.scale__control--value');
+const pristine = new Pristine(imageUploadForm, {
+  classTo: 'setup-upload-form__element',
+  errorTextParent: 'setup-upload-form__element',
+  errorTextClass: 'setup-upload-form__error-text',
+});
+
+const scaleSmaller = document.querySelector('.scale__control--smaller');
+const scaleBigger = document.querySelector('.scale__control--bigger');
+const MIN_PERCENTAGE = 25;
+const MAX_PERCENTAGE = 100;
+const hashtagPattern =  /^#[A-Za-zА-Яа-яЁё0-9]{1,19}$/;
+const HASHTAG_LIMIT = 5;
 const onPopupEscKeydown = (e) => {
   if (e.key === 'Escape') {
     e.preventDefault();
@@ -22,17 +34,36 @@ const onPopupEscKeydown = (e) => {
 // сделанно для поднятия функции
 function closeUserModal () {
   uploadOverlay.classList.add('hidden');
-
+  const inputFile = document.querySelector('input[type=file]');
+  inputFile.value = '';
   document.removeEventListener('keydown', onPopupEscKeydown);
 }
 
 uploadInput.addEventListener('change', (evt) => {
+  // effectLevel.classList.add('hidden');
+  // sliderElement.classList.add('hidden');
+  // imageUploadPreview.style.filter = 'none';
+
+  const FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+  const fileChooser = document.querySelector('.img-upload__preview input[type=file]');
+  const preview = document.querySelector('.setup-upload-image');
+
+  fileChooser.addEventListener('change', () => {
+    const file = fileChooser.files[0];
+    const fileName = file.name.toLowerCase();
+
+    const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
+    if (matches) {
+      preview.src = URL.createObjectURL(file);
+    }
+  });
+
   evt.preventDefault();
-  effectLevel.classList.add('hidden');
+  // effectLevel.classList.add('hidden');
   imageUploadPreview.style.transform = 'scale(1)';
   scaleValue.value = '100%';
   imageUploadPreview.style.filter = 'none';
-  sliderElement.classList.add('hidden');
+  // sliderElement.classList.add('hidden');
   uploadOverlay.classList.remove('hidden');
   body.classList.add('modal-open');
   document.addEventListener('keydown', onPopupEscKeydown);
@@ -57,22 +88,14 @@ uploadInput.addEventListener('change', (evt) => {
 });
 
 
-const pristine = new Pristine(imageUploadForm, {
-  classTo: 'setup-upload-form__element',
-  errorTextParent: 'setup-upload-form__element',
-  errorTextClass: 'setup-upload-form__error-text',
-});
-
-const hashtagPattern =  /^#[A-Za-zА-Яа-яЁё0-9]{1,19}$/;
-const HASHTAG_LIMIT = 5;
 const validateHashtagsQuantity = (value) => {
   const hashArray = value.split(' ');
   return hashArray.length <= HASHTAG_LIMIT;
 };
-const validateHashtagsLength = (value) => {
+const validateHashtagsQuality = (value) => {
   const hashArray = value.split(' ');
   for (let i = 0; i < hashArray.length; i++) {
-
+    if (value === '') {return true;}
     if (!hashtagPattern.test(hashArray[i])) {
       return false;
     }
@@ -86,7 +109,9 @@ const validateHashtagsLength = (value) => {
 };
 
 pristine.addValidator(hashtagInput, validateHashtagsQuantity, 'Слишком много хэштегов');
-pristine.addValidator(hashtagInput, validateHashtagsLength, 'Неправильный хэштег');
+pristine.addValidator(hashtagInput, validateHashtagsQuality, 'Неправильный хэштег');
+
+
 const enableValidation = (onSuccess) => {
   imageUploadForm.addEventListener('submit', (evt) => {
     evt.preventDefault();
@@ -98,11 +123,7 @@ const enableValidation = (onSuccess) => {
   });
 };
 
-const scaleSmaller = document.querySelector('.scale__control--smaller');
-const scaleBigger = document.querySelector('.scale__control--bigger');
 
-const MIN_PERCENTAGE = 25;
-const MAX_PERCENTAGE = 100;
 scaleSmaller.addEventListener('click', () => {
   if (parseInt(scaleValue.value, 10) > MIN_PERCENTAGE) {
     scaleValue.value = `${parseInt(scaleValue.value, 10) - MIN_PERCENTAGE}%`;
@@ -177,7 +198,6 @@ const sliderController = (min, max, step) => {
   });
 };
 const  onFilterChange = (evt) => {
-  effectLevel.classList.remove('hidden');
   if (evt.target.value === 'none') {
     effectLevel.classList.add('hidden');
     sliderElement.classList.add('hidden');

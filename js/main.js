@@ -1,7 +1,6 @@
 import {getData} from './network.js';
 import {showSuccess} from './util.js';
 import {renderThumbnails} from './thumbnails.js';
-// import {renderFullPhoto} from './fullphoto.js';
 import {sliderController, enableValidation} from'./user-form.js';
 const POST_COUNT = 19;
 
