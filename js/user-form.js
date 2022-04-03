@@ -32,32 +32,27 @@ const onPopupEscKeydown = (e) => {
 // сделанно для поднятия функции
 function closeUserModal () {
   uploadOverlay.classList.add('hidden');
-  const inputFile = document.querySelector('input[type=file]');
-  inputFile.value = '';
+  uploadInput.value = '';
   document.removeEventListener('keydown', onPopupEscKeydown);
 }
 
 uploadInput.addEventListener('change', (evt) => {
   const FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
-  const fileChooser = document.querySelector('.img-upload__start input[type=file]');
   const preview = document.querySelector('.setup-upload-image');
 
-  fileChooser.addEventListener('change', () => {
-    const file = fileChooser.files[0];
-    const fileName = file.name.toLowerCase();
+  const file = evt.target.files[0];
+  const fileName = file.name.toLowerCase();
 
-    const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
-    if (matches) {
-      preview.src = URL.createObjectURL(file);
-    }
-  });
+  const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
+  if (matches) {
+    preview.src = URL.createObjectURL(file);
+  }
+
 
   evt.preventDefault();
-  // effectLevel.classList.add('hidden');
   imageUploadPreview.style.transform = 'scale(1)';
   scaleValue.value = '100%';
   imageUploadPreview.style.filter = 'none';
-  // sliderElement.classList.add('hidden');
   uploadOverlay.classList.remove('hidden');
   body.classList.add('modal-open');
   document.addEventListener('keydown', onPopupEscKeydown);
