@@ -1,12 +1,13 @@
-import {createPosts} from './data.js';
+import {getData} from './network.js';
+import {showSuccess} from './util.js';
 import {renderThumbnails} from './thumbnails.js';
-import {renderFullPhoto} from './fullphoto.js';
-import {userFormControler, sliderController} from'./user-form.js';
+import {sliderController, enableValidation} from'./user-form.js';
+const POST_COUNT = 19;
 
-const POST_COUNT = 12;
+enableValidation(showSuccess);
+getData((thumbnails) => {
+  renderThumbnails(thumbnails.slice(0, POST_COUNT));
+}, () => {
 
-const similarPictures = createPosts(POST_COUNT);
-renderThumbnails(similarPictures);
-renderFullPhoto(similarPictures[0]);
-userFormControler();
+});
 sliderController(0, 1, 0.1);

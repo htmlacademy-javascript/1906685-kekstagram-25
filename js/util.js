@@ -1,3 +1,5 @@
+import {closeUserModal} from './user-form.js';
+
 /**
  * Функция возвращает случайное число в заданном диапазоне
  * @param {number} min минимальное значение заданного диапазона
@@ -41,20 +43,49 @@ const windowCloser = (closeButton, window) => {
   const onPopupEscKeydown = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
-      closeUserModal();
+      closeWindow();
     }
   };
   document.addEventListener('keydown', onPopupEscKeydown);
 
-  function closeUserModal () {
+  function closeWindow () {
     window.classList.add('hidden');
 
     document.removeEventListener('keydown', onPopupEscKeydown);
   }
 
   closeButton.addEventListener('click', () => {
-    closeUserModal();
+    closeWindow();
   });
 };
 
-export {getRandomIntInclusive, getRandomArrayElement, isAlowableLength, windowCloser};
+
+const errorTemplate = document.querySelector('#error')
+  .content
+  .querySelector('.error');
+
+const showAlert = () => {
+  const errorPopup = errorTemplate.cloneNode(true);
+  closeUserModal();
+  document.body.append(errorPopup);
+  const tryAgainButton = errorPopup.querySelector('.error__button');
+  tryAgainButton.addEventListener('click', () => {
+    errorPopup.remove();
+  });
+};
+
+const successTemplate = document.querySelector('#success')
+  .content
+  .querySelector('.success');
+
+const showSuccess = () => {
+  const successPopup = successTemplate.cloneNode(true);
+  closeUserModal();
+  document.body.append(successPopup);
+  const coolButton = successPopup.querySelector('.success__button');
+  coolButton.addEventListener('click', () => {
+    successPopup.remove();
+  });
+};
+
+export {getRandomIntInclusive, getRandomArrayElement, isAlowableLength, windowCloser, showAlert, showSuccess};
